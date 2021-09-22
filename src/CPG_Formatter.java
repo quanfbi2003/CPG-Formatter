@@ -5,6 +5,9 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 import javax.swing.*;
 import com.opencsv.CSVWriter;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -16,6 +19,8 @@ import com.opencsv.CSVWriter;
  * @author dream
  */
 public class CPG_Formatter extends javax.swing.JFrame {
+
+    private String currentPath = "";
 
     /**
      * Creates new form CPG_Formatter
@@ -94,27 +99,32 @@ public class CPG_Formatter extends javax.swing.JFrame {
             }
         });
         format.addActionListener((ActionEvent e) -> {
-            if (!dir.getText().equalsIgnoreCase("")) {
-                final File folder = new File(dir.getText());
-                int res = JOptionPane.showConfirmDialog(null, "Format?");
-                if (res == JOptionPane.YES_OPTION) {
-                    File parent = new File("output/" + folder.getName());
-                    if (!parent.isDirectory()) {
-                        parent.mkdir();
+            try {
+                currentPath = new File(CPG_Formatter.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+                if (!dir.getText().equalsIgnoreCase("")) {
+                    final File folder = new File(dir.getText());
+                    int res = JOptionPane.showConfirmDialog(null, "Format?");
+                    if (res == JOptionPane.YES_OPTION) {
+                        File parent = new File(currentPath + "/output/" + folder.getName());
+                        if (!parent.isDirectory()) {
+                            parent.mkdirs();
+                        }
+                        listFilesForFolder(folder);
+                        JOptionPane.showMessageDialog(null, "Done!");
+                        JOptionPane.showMessageDialog(null, "The output files in " + currentPath);
                     }
-                    listFilesForFolder(folder);
-                    JOptionPane.showMessageDialog(null, "Done!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Select Folder!!!");
                 }
-            } else {
-                JOptionPane.showMessageDialog(null, "Select Folder!!!");
+            } catch (Exception ex) {
             }
         });
     }
 
     public void listFilesForFolder(final File folder) {
         try {
-            FileWriter nodesFileWriter = new FileWriter(new File("output/" + folder.getName() + "/nodes.csv"));
-            FileWriter edgesFileWriter = new FileWriter(new File("output/" + folder.getName() + "/edges.csv"));
+            FileWriter nodesFileWriter = new FileWriter(new File(currentPath + "/output/" + folder.getName() + "/nodes.csv"));
+            FileWriter edgesFileWriter = new FileWriter(new File(currentPath + "/output/" + folder.getName() + "/edges.csv"));
             CSVWriter nodesCSVWriter = new CSVWriter(nodesFileWriter);
             CSVWriter edgesCSVWriter = new CSVWriter(edgesFileWriter);
 
