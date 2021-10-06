@@ -5,9 +5,6 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 import javax.swing.*;
 import com.opencsv.CSVWriter;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -147,7 +144,7 @@ public class CPG_Formatter extends javax.swing.JFrame {
                             String[] edges = {temp[0].trim().substring(1), temp[1].substring(0, temp[1].length()),
                                 temp[2].substring(0, (temp[2].length() - 5))};
                             edgesCSVWriter.writeNext(edges);
-                        } else if (Pattern.matches(".\\d+.+", str)) {
+                        } else if (Pattern.matches(".\\d+.+", str) && !str.contains("\"\"")) {
                             String[] temp = str.split("\" \\[label = \"\\(");
                             String temp1 = temp[1].substring(temp[1].indexOf(",") + 1, (temp[1].length() - 4));
                             int o = 0, c = 0, oi = 0;
