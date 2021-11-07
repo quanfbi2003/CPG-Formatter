@@ -1,6 +1,6 @@
 # Generate-CPG-Graph-Script
 
-B1: Mở joern repl (giao diện joern-cli): ./joern -J-Xmx3G
+B1: Mở joern repl từ /root/bin/joern/joern-cli/ (giao diện joern-cli): ./joern -J-Xmx3G (Số Ram (3) bé hơn số ram set cho máy ảo 1 GB (4))
 
 
 B2: importCode(inputPath="./x42/c", projectName="x42-c")
