@@ -147,30 +147,32 @@ public class CPG_Formatter extends javax.swing.JFrame {
                         } else if (Pattern.matches(".\\d+.+", str) && !str.contains("\"\"")) {
                             String[] temp = str.split("\" \\[label = \"\\(");
                             String temp1 = temp[1].substring(temp[1].indexOf(",") + 1, (temp[1].length() - 4));
-                            int o = 0, c = 0, oi = 0;
-                            boolean check = false;
-                            for (int i = 0; i < temp1.length(); i++) {
-                                if (temp1.charAt(i) == '(') {
-                                    o++;
+                            if (!temp1.equals(",")) {
+                                int o = 0, c = 0, oi = 0;
+                                boolean check = false;
+                                for (int i = 0; i < temp1.length(); i++) {
+                                    if (temp1.charAt(i) == '(') {
+                                        o++;
+                                    }
+                                    if (temp1.charAt(i) == ')') {
+                                        c++;
+                                    }
+                                    if (temp1.charAt(i) == '\"') {
+                                        oi++;
+                                    }
+                                    if (temp1.charAt(i) == ',' && o == c && oi % 2 == 0) {
+                                        String[] nodes = {temp[0].substring(1), temp[1].substring(0, temp[1].indexOf(",")),
+                                            temp1.substring(0, i)};
+                                        nodesCSVWriter.writeNext(nodes);
+                                        check = true;
+                                        break;
+                                    }
                                 }
-                                if (temp1.charAt(i) == ')') {
-                                    c++;
-                                }
-                                if (temp1.charAt(i) == '\"') {
-                                    oi++;
-                                }
-                                if (temp1.charAt(i) == ',' && o == c && oi % 2 == 0) {
+                                if (!check) {
                                     String[] nodes = {temp[0].substring(1), temp[1].substring(0, temp[1].indexOf(",")),
-                                        temp1.substring(0, i)};
+                                        temp[1].substring(temp[1].indexOf(",") + 1, (temp[1].length() - 4))};
                                     nodesCSVWriter.writeNext(nodes);
-                                    check = true;
-                                    break;
                                 }
-                            }
-                            if (!check) {
-                                String[] nodes = {temp[0].substring(1), temp[1].substring(0, temp[1].indexOf(",")),
-                                    temp[1].substring(temp[1].indexOf(",") + 1, (temp[1].length() - 4))};
-                                nodesCSVWriter.writeNext(nodes);
                             }
                         }
                     }
